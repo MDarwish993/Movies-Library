@@ -3,7 +3,7 @@
 **Author Name**: **Mohammad Darwish**
 
 ## WRRC
-![web request response cycle](./Assest/Lab11W.jpg)
+![web request response cycle](./Assest/Lab12W.jpg)
 
 ## Overview
 
@@ -19,3 +19,5 @@
 ##### What are the features included in you app ?
 1. Home Page
 2. Favorite Page
+3. Trending Page
+4. Search Page
