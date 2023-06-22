@@ -52,6 +52,11 @@ app.get("/top_rated",async (req,res)=>{
 
 
 
+app.get("/upcoming",async (req,res)=>{
+    let axiosResponse=await axios.get(`https://api.themoviedb.org/3/movie/upcoming?api_key=${process.env.APIKEY}`);
+    res.send(axiosResponse.data);
+})
+
 
 
 
