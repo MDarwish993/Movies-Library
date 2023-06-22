@@ -21,3 +21,5 @@
 2. Favorite Page
 3. Trending Page
 4. Search Page
+5. Top Rated Page
+6. upcoming Page
