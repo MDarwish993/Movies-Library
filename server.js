@@ -1,7 +1,9 @@
 'use strict';
 
-function Movie(title,posterPath,overview){
+function Movie(id,title,releaseDate,posterPath,overview){
+    this.id=id;
     this.title=title;
+    this.release_date=releaseDate;
     this.poster_path=posterPath;
     this.overview=overview;
 }
@@ -9,13 +11,47 @@ function Movie(title,posterPath,overview){
 
 const express=require("express");
 const dataFromJson=require("./MovieData/data.json");
-
+const axios = require("axios");
+require("dotenv").config();
 const app=express();
 
 
 app.get("/",handleServerPage);
 
 app.get("/favorite",handleFavoritePage);
+
+
+
+app.get("/trending",async(req,res)=>{
+    let newMoviesArray=[];
+    let axiosResponse=await axios.get(`https://api.themoviedb.org/3/trending/all/week?api_key=${process.env.APIKEY}&language=en-US`);
+    axiosResponse.data.results.forEach(obj => {
+        newMoviesArray.push(new Movie(obj.id,obj.title,obj.release_date,obj.poster_path,obj.overview))
+    });
+
+    res.send(newMoviesArray);
+});
+
+
+app.get("/search",async(req,res)=>{
+    
+    let MovieTitle=req.query.name;
+    let axiosResponse=await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=The&page=2`);
+    let searchByNames =axiosResponse.data.results.filter(obj=> obj.title == MovieTitle);
+
+    res.send(searchByNames);
+    
+});
+
+//my own rout
+
+app.get("/top_rated",async (req,res)=>{
+    let axiosResponse=await axios.get(`https://api.themoviedb.org/3/movie/top_rated?api_key=${process.env.APIKEY}`);
+    res.send(axiosResponse.data);
+})
+
+
+
 
 
 
