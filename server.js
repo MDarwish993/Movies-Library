@@ -34,12 +34,14 @@ app.get("/trending",async(req,res)=>{
 
 
 app.get("/search",async(req,res)=>{
-    
+    let newMoviesArray=[];
     let MovieTitle=req.query.name;
-    let axiosResponse=await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=The&page=2`);
-    let searchByNames =axiosResponse.data.results.filter(obj=> obj.title == MovieTitle);
-
-    res.send(searchByNames);
+    let axiosResponse=await axios.get(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.APIKEY}&language=en-US&query=${MovieTitle}&page=2`);
+   // let searchByNames =axiosResponse.data.results.filter(obj=> obj.title == MovieTitle);
+   axiosResponse.data.results.forEach(obj => {
+    newMoviesArray.push(new Movie(obj.id,obj.title,obj.release_date,obj.poster_path,obj.overview))
+});
+    res.send(newMoviesArray);
     
 });
 
