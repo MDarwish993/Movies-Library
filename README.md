@@ -23,3 +23,5 @@
 4. Search Page
 5. Top Rated Page
 6. upcoming Page
+7. addMovie
+8. getMovies
