@@ -18,7 +18,8 @@ const pg=require("pg");
 
 app.use(express.json());
 
-const client=new pg.Client('postgres://localhost:5432/moviesdb');
+const dbUrl=process.env.DBURL;
+const client=new pg.Client(dbUrl);
 
 
 //My Application Routes
@@ -72,9 +73,9 @@ app.get("/upcoming",async (req,res)=>{
 
 //Route to  add new movie Page
 app.post("/addMovie", (req, res) => {
-    let{t,r,p,o}=req.body;
-    let sql=`insert into moviesDetails(title,release_date,poster_path,overview ) values($1,$2,$3,$4)`;
-    client.query(sql,[t,r,p,o]).then(()=>{
+    let{t,r,p,o,c}=req.body;
+    let sql=`insert into moviesDetails(title,release_date,poster_path,overview,comment) values($1,$2,$3,$4,$5)`;
+    client.query(sql,[t,r,p,o,c]).then(()=>{
         res.send(`movie ${t} added to database`);
     });
     
@@ -87,6 +88,50 @@ app.get("/getMovies",(req,res)=>{
     res.send(moviesDetailsData.rows);
   });
 });
+
+//Route to  get  movie By Id
+app.get("/getMovie/:id",async(req,res)=>{
+   try{
+    let {id} =req.params;
+    let sql=`SELECT * FROM moviesDetails WHERE ID=${id}`;
+    let data=await client.query(sql);
+        res.send(data.rows)
+   }catch(e){
+    next("getMovie"+e);
+   }
+});
+
+//Route to  delete  movie By Id
+app.delete("/delete/:id",async(req,res)=>{
+    try {
+        let {id} =req.params;
+        let sql=`DELETE FROM moviesDetails WHERE ID =${id}`;
+        let data=await client.query(sql);
+        res.end();
+    } catch (e) {
+        next("Delete route"+e);
+    }
+})
+
+
+//Route to  update  movie By Id
+app.put("/update/:id",(req,res)=>{
+    try {
+        let {newComment}=req.body;
+        let {id}=req.params;
+        let sql=`SELECT * FROM moviesDetails WHERE ID=${id}`;
+            client.query(sql).then((movieData)=>{
+                const {title,releaseDate,posterPath,overview,comment}=movieData.rows[0];
+                let sqlU = ` UPDATE moviesDetails SET comment=$1 WHERE id=${id}`;
+                client.query(sqlU,[newComment]).then((data)=>{
+                    res.send(`Updated`);
+                })
+            });
+    } catch (e) {
+        next("update route "+e);
+    }
+});
+
 
 //handle Error Functions
 
