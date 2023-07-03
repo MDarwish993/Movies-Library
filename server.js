@@ -18,8 +18,9 @@ const pg=require("pg");
 
 app.use(express.json());
 
-const dbUrl=process.env.DBURL;
-const client=new pg.Client(dbUrl);
+const PORT=process.env.PORT;
+const DBURL=process.env.DBURL;
+const client=new pg.Client(DBURL);
 
 
 //My Application Routes
@@ -151,8 +152,8 @@ app.use(function(req, res, next) {
   });
   
   client.connect().then(()=>{
-    app.listen(3000,()=>{
-        console.log("Running at 3000");
+    app.listen(PORT,()=>{
+        console.log(`Running at ${PORT}`);
     });
     
 });
