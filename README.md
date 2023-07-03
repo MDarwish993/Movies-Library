@@ -25,3 +25,4 @@
 6. upcoming Page
 7. addMovie
 8. getMovies
+9. CRUD operation 
