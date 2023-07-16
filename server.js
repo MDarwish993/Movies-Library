@@ -2,7 +2,7 @@
 
 const express=require("express");
 require("dotenv").config();
-
+const cors = require("cors");
 
 const client = require("./client");
 const moviesRoutes = require("./Routers/movies.routes");
@@ -14,6 +14,7 @@ const {PORT}=require("./configs");
 
 
 const app=express();
+app.use(cors());
 app.use(express.json());
 app.use(generalRoutes);
 app.use('/movies',moviesRoutes);
